@@ -1,6 +1,7 @@
 package com.example.flixster.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,11 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.flixster.MovieDetailsActivity
 import com.example.flixster.R
 import com.example.flixster.models.Movie
 
+const val MOVIE_EXTRA = "MOVIE_EXTRA"
 
 class MovieAdapter(var context: Context, movies: List<Movie>) :
     RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
@@ -36,7 +40,7 @@ class MovieAdapter(var context: Context, movies: List<Movie>) :
         return movies.size
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         var tvTitle: TextView
         var tvOverview: TextView
         var ivPoster: ImageView
@@ -59,6 +63,14 @@ class MovieAdapter(var context: Context, movies: List<Movie>) :
             tvTitle = itemView.findViewById(R.id.tvTitle)
             tvOverview = itemView.findViewById(R.id.tvOverview)
             ivPoster = itemView.findViewById(R.id.ivPoster)
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            val movie = movies[adapterPosition];
+            val intent = Intent(context, MovieDetailsActivity::class.java)
+            intent.putExtra(MOVIE_EXTRA, movie)
+            context.startActivities(arrayOf(intent))
         }
     }
 

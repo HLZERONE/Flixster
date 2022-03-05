@@ -1,16 +1,20 @@
 package com.example.flixster.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.ArrayList
 
-
-class Movie(jsonObject: JSONObject) {
-    var posterPath: String
-    var title: String
-    var overview: String
-    var backdropPath: String
+@Parcelize
+class Movie(
+    var movieId : Int,
+    private var posterPath: String,
+    var title: String,
+    var overview: String,
+    var voteAverage: Double,
+    var backdropPath: String) :Parcelable {
 
     @JvmName("getPosterPath1")
     fun getPosterPath(): String {
@@ -27,16 +31,19 @@ class Movie(jsonObject: JSONObject) {
         fun fromJsonArray(movieJsonArray: JSONArray): List<Movie> {
             val movies: MutableList<Movie> = ArrayList()
             for (i in 0 until movieJsonArray.length()) {
-                movies.add(Movie(movieJsonArray.getJSONObject(i)))
+                val movieJson = movieJsonArray.getJSONObject(i)
+                movies.add(
+                    Movie(
+                        movieJson.getInt("id"),
+                        movieJson.getString("poster_path"),
+                        movieJson.getString("title"),
+                        movieJson.getString("overview"),
+                        movieJson.getDouble("vote_average"),
+                        movieJson.getString("backdrop_path")
+                    )
+                )
             }
             return movies
         }
-    }
-
-    init {
-        posterPath = jsonObject.getString("poster_path")
-        title = jsonObject.getString("title")
-        overview = jsonObject.getString("overview")
-        backdropPath = jsonObject.getString("backdrop_path")
     }
 }
